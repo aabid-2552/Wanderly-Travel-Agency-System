@@ -25,7 +25,7 @@ Full-stack resume project: **Spring Boot (backend)** + **HTML/CSS/JavaScript (fr
 ## Project Structure
 
 ```
-wanderly-travel-agency/     <- open THIS folder in IntelliJ (pom.xml sits right here)
+wanderly-travel-agency
 ├── pom.xml
 ├── src/main/java/com/travelagency/
 │   ├── config/       -> SecurityConfig, JwtUtil, JwtAuthFilter, DataSeeder
@@ -42,24 +42,6 @@ wanderly-travel-agency/     <- open THIS folder in IntelliJ (pom.xml sits right 
     └── js/api.js
 ```
 
-## Opening in IntelliJ IDEA
-
-1. Unzip the file.
-2. In IntelliJ: **File → Open** → select the `wanderly-travel-agency` folder (the one containing `pom.xml`).
-3. IntelliJ will detect it as a Maven project and prompt to load Maven changes — click **"Load Maven Project"** (or it may auto-import). It will then download all dependencies (needs internet).
-4. Once indexed, open `TravelAgencyApplication.java` and click the green ▶ Run button.
-5. The `frontend/` folder is just static files sitting alongside the backend — right-click `frontend/index.html` in the IntelliJ project tree → **Open in Browser**.
-
-## How to Run (command line, alternative)
-
-Requirements: **Java 17+** and **Maven** installed.
-
-```bash
-cd wanderly-travel-agency
-mvn spring-boot:run
-```
-
-The API will start at **http://localhost:8080**.
 
 On first run it auto-creates:
 - Admin login: `admin@travelagency.com` / `admin123`
@@ -101,12 +83,3 @@ Then open http://localhost:5500 in your browser.
 | PUT | `/api/bookings/{id}/status` | Admin |
 | POST | `/api/contact` | Public |
 | GET | `/api/contact` | Admin |
-
-## Resume Bullet Point (suggestion)
-
-> Built a full-stack travel booking website using Spring Boot, Spring Security (JWT-based role authentication), Spring Data JPA, and a vanilla HTML/CSS/JavaScript frontend, implementing user/admin roles, package management, and a booking workflow.
-
-## Notes
-
-- This project was generated in a sandboxed environment without internet access, so it hasn't been Maven-built here — dependency versions are pinned to stable releases. Run `mvn spring-boot:run` on your own machine (with internet, for Maven to download dependencies) to build and start it. If you hit any compile error, paste it back and it can be fixed quickly.
-- For a real production deployment you'd want to swap H2 for MySQL/PostgreSQL — just update `application.properties` and add the relevant driver dependency.
