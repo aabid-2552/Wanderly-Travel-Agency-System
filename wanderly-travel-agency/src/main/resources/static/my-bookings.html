@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Bookings | Wanderly</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="index.html" class="logo">Wander<span>ly</span></a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="packages.html">Packages</a>
+    <a href="contact.html">Contact Us</a>
+  </div>
+  <div class="nav-actions" id="nav-auth-area"></div>
+</nav>
+
+<section class="section">
+  <div class="section-header" style="margin-bottom:24px;">
+    <div class="tag">Your Trips</div>
+    <h2>My Bookings</h2>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Package</th><th>Location</th><th>Travel Date</th><th>People</th><th>Status</th></tr>
+      </thead>
+      <tbody id="bookings-body">
+        <tr><td colspan="5" class="empty-state">Loading...</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<script src="js/api.js"></script>
+<script>
+  if (!Auth.isLoggedIn()) {
+    window.location.href = "login.html?redirect=my-bookings.html";
+  }
+
+  async function loadMyBookings() {
+    const body = document.getElementById("bookings-body");
+    try {
+      const bookings = await apiFetch("/bookings/my", { method: "GET" });
+      if (bookings.length === 0) {
+        body.innerHTML = '<tr><td colspan="5" class="empty-state">You have no bookings yet. <a href="packages.html" style="color:var(--accent)">Browse packages</a></td></tr>';
+        return;
+      }
+      body.innerHTML = bookings.map(b => `
+        <tr>
+          <td>${b.tourPackage.title}</td>
+          <td>${b.tourPackage.location || '-'}</td>
+          <td>${b.travelDate}</td>
+          <td>${b.numberOfPeople}</td>
+          <td><span class="badge badge-${b.status.toLowerCase()}">${b.status}</span></td>
+        </tr>
+      `).join("");
+    } catch (err) {
+      body.innerHTML = `<tr><td colspan="5" class="empty-state">${err.message}</td></tr>`;
+    }
+  }
+  loadMyBookings();
+</script>
+</body>
+</html>

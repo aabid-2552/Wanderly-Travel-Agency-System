@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wanderly | Travel & Tour Agency</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="index.html" class="logo">Wander<span>ly</span></a>
+  <div class="nav-links">
+    <a href="index.html" class="active">Home</a>
+    <a href="packages.html">Packages</a>
+    <a href="contact.html">Contact Us</a>
+  </div>
+  <div class="nav-actions" id="nav-auth-area"></div>
+</nav>
+
+<section class="hero">
+  <div class="hero-content">
+    <h1>Explore The World <span>With Us</span></h1>
+    <p>Handpicked tour packages, real-time booking and everything you need for your next adventure — all in one place.</p>
+    <div class="hero-features">
+      <div>Travel Insurance</div>
+      <div>Hotel Booking</div>
+      <div>Return Flight</div>
+      <div>Air Tickets</div>
+      <div>Accommodation</div>
+      <div>Visa Services</div>
+    </div>
+    <div class="hero-cta">
+      <a href="packages.html" class="btn btn-primary">Explore Packages</a>
+      <a href="contact.html" class="btn btn-outline">Contact Us</a>
+    </div>
+  </div>
+  <div class="hero-image">
+    <img src="https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=900" alt="Travel destination">
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-header">
+    <div class="tag">Top Picks</div>
+    <h2>Popular Tour Packages</h2>
+    <p>Our most loved destinations, booked by thousands of happy travelers.</p>
+  </div>
+  <div class="package-grid" id="featured-packages">
+    <p style="text-align:center; color:var(--text-muted); grid-column: 1/-1;">Loading packages...</p>
+  </div>
+  <div class="text-center mt-20">
+    <a href="packages.html" class="btn btn-outline">View All Packages</a>
+  </div>
+</section>
+
+<section class="section" style="background: var(--bg-darker);">
+  <div class="section-header">
+    <div class="tag">Why Wanderly</div>
+    <h2>Service We Offer Is Designed To Meet Your Needs</h2>
+    <p>From flights to visas — we handle it all so you can just enjoy the trip.</p>
+  </div>
+  <div class="package-grid">
+    <div class="package-card"><div class="body"><h3>✈️ Flight Booking</h3><p class="desc">Best fares on return flights to every destination we offer.</p></div></div>
+    <div class="package-card"><div class="body"><h3>🏨 Hotel & Stay</h3><p class="desc">Curated accommodations, from budget stays to luxury resorts.</p></div></div>
+    <div class="package-card"><div class="body"><h3>🛡️ Travel Insurance</h3><p class="desc">Travel worry-free with comprehensive coverage on every trip.</p></div></div>
+  </div>
+</section>
+
+<footer>
+  <p>&copy; 2026 <span class="accent">Wanderly</span> Travel Agency. Built with Spring Boot &amp; JavaScript for portfolio demonstration.</p>
+</footer>
+
+<script src="js/api.js"></script>
+<script>
+  async function loadFeaturedPackages() {
+    const container = document.getElementById("featured-packages");
+    try {
+      const packages = await apiFetch("/packages", { method: "GET" });
+      const featured = packages.slice(0, 3);
+
+      if (featured.length === 0) {
+        container.innerHTML = '<p class="empty-state" style="grid-column:1/-1;">No packages available yet.</p>';
+        return;
+      }
+
+      container.innerHTML = featured.map(pkg => `
+        <div class="package-card">
+          <div class="img-wrap">
+            <img src="${pkg.imageUrl || 'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800'}" alt="${pkg.title}">
+            <span class="category-badge">${pkg.category || 'Tour'}</span>
+          </div>
+          <div class="body">
+            <h3>${pkg.title}</h3>
+            <div class="location">📍 ${pkg.location || ''} · ${pkg.durationDays || '-'} days</div>
+            <p class="desc">${pkg.description || ''}</p>
+            <div class="footer-row">
+              <div class="price">$${pkg.price} <small>/ person</small></div>
+              <a href="booking.html?packageId=${pkg.id}" class="btn btn-primary btn-small">Book Now</a>
+            </div>
+          </div>
+        </div>
+      `).join("");
+    } catch (err) {
+      container.innerHTML = `<p class="empty-state" style="grid-column:1/-1;">${err.message}</p>`;
+    }
+  }
+  loadFeaturedPackages();
+</script>
+</body>
+</html>

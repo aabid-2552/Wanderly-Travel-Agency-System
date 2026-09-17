@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Packages | Wanderly</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="index.html" class="logo">Wander<span>ly</span></a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="packages.html" class="active">Packages</a>
+    <a href="contact.html">Contact Us</a>
+  </div>
+  <div class="nav-actions" id="nav-auth-area"></div>
+</nav>
+
+<section class="section">
+  <div class="section-header">
+    <div class="tag">All Destinations</div>
+    <h2>Tour Packages</h2>
+    <p>Pick a package that fits your dream trip and book instantly.</p>
+  </div>
+  <div class="package-grid" id="all-packages">
+    <p style="text-align:center; color:var(--text-muted); grid-column: 1/-1;">Loading packages...</p>
+  </div>
+</section>
+
+<footer>
+  <p>&copy; 2026 <span class="accent">Wanderly</span> Travel Agency. Built with Spring Boot &amp; JavaScript for portfolio demonstration.</p>
+</footer>
+
+<script src="js/api.js"></script>
+<script>
+  async function loadPackages() {
+    const container = document.getElementById("all-packages");
+    try {
+      const packages = await apiFetch("/packages", { method: "GET" });
+
+      if (packages.length === 0) {
+        container.innerHTML = '<p class="empty-state" style="grid-column:1/-1;">No packages available yet.</p>';
+        return;
+      }
+
+      container.innerHTML = packages.map(pkg => `
+        <div class="package-card">
+          <div class="img-wrap">
+            <img src="${pkg.imageUrl || 'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800'}" alt="${pkg.title}">
+            <span class="category-badge">${pkg.category || 'Tour'}</span>
+          </div>
+          <div class="body">
+            <h3>${pkg.title}</h3>
+            <div class="location">📍 ${pkg.location || ''} · ${pkg.durationDays || '-'} days</div>
+            <p class="desc">${pkg.description || ''}</p>
+            <div class="footer-row">
+              <div class="price">$${pkg.price} <small>/ person</small></div>
+              <a href="booking.html?packageId=${pkg.id}" class="btn btn-primary btn-small">Book Now</a>
+            </div>
+          </div>
+        </div>
+      `).join("");
+    } catch (err) {
+      container.innerHTML = `<p class="empty-state" style="grid-column:1/-1;">${err.message}</p>`;
+    }
+  }
+  loadPackages();
+</script>
+</body>
+</html>

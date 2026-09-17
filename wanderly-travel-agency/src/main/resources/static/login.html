@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login | Wanderly</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="index.html" class="logo">Wander<span>ly</span></a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="packages.html">Packages</a>
+    <a href="contact.html">Contact Us</a>
+  </div>
+  <div class="nav-actions" id="nav-auth-area"></div>
+</nav>
+
+<div class="form-wrapper">
+  <h2>Welcome Back</h2>
+  <p class="subtitle">Login to book packages and manage your trips.</p>
+
+  <div class="alert alert-error" id="error-box"></div>
+
+  <form id="login-form">
+    <div class="form-group">
+      <label>Email Address</label>
+      <input type="email" id="email" required placeholder="you@example.com">
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" id="password" required placeholder="Your password">
+    </div>
+    <button type="submit" class="btn btn-primary btn-block">Login</button>
+  </form>
+
+  <div class="form-footer-link">
+    Don't have an account? <a href="register.html">Register here</a>
+  </div>
+  <p class="form-footer-link" style="margin-top:6px; font-size:0.8rem;">
+    Admin demo login: admin@travelagency.com / admin123
+  </p>
+</div>
+
+<script src="js/api.js"></script>
+<script>
+  document.getElementById("login-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const errorBox = document.getElementById("error-box");
+    errorBox.classList.remove("show");
+
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+
+    try {
+      const data = await apiFetch("/auth/login", {
+        method: "POST",
+        body: JSON.stringify({ email, password })
+      });
+      Auth.setSession(data);
+
+      const redirect = new URLSearchParams(window.location.search).get("redirect");
+      if (redirect) {
+        window.location.href = redirect;
+      } else if (data.role === "ROLE_ADMIN") {
+        window.location.href = "admin.html";
+      } else {
+        window.location.href = "packages.html";
+      }
+    } catch (err) {
+      errorBox.textContent = err.message;
+      errorBox.classList.add("show");
+    }
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact Us | Wanderly</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="index.html" class="logo">Wander<span>ly</span></a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="packages.html">Packages</a>
+    <a href="contact.html" class="active">Contact Us</a>
+  </div>
+  <div class="nav-actions" id="nav-auth-area"></div>
+</nav>
+
+<div class="form-wrapper" style="max-width:560px;">
+  <h2>Get In Touch</h2>
+  <p class="subtitle">Have a question about a package or booking? Send us a message.</p>
+
+  <div class="alert alert-error" id="error-box"></div>
+  <div class="alert alert-success" id="success-box"></div>
+
+  <form id="contact-form">
+    <div class="form-row">
+      <div class="form-group">
+        <label>Your Name</label>
+        <input type="text" id="name" required>
+      </div>
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" id="email" required>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Subject</label>
+      <input type="text" id="subject" placeholder="e.g. Question about Maldives package">
+    </div>
+    <div class="form-group">
+      <label>Message</label>
+      <textarea id="message" rows="5" required></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary btn-block">Send Message</button>
+  </form>
+</div>
+
+<script src="js/api.js"></script>
+<script>
+  document.getElementById("contact-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const errorBox = document.getElementById("error-box");
+    const successBox = document.getElementById("success-box");
+    errorBox.classList.remove("show");
+    successBox.classList.remove("show");
+
+    const payload = {
+      name: document.getElementById("name").value.trim(),
+      email: document.getElementById("email").value.trim(),
+      subject: document.getElementById("subject").value.trim(),
+      message: document.getElementById("message").value.trim()
+    };
+
+    try {
+      const res = await apiFetch("/contact", { method: "POST", body: JSON.stringify(payload) });
+      successBox.textContent = res.message || "Message sent!";
+      successBox.classList.add("show");
+      document.getElementById("contact-form").reset();
+    } catch (err) {
+      errorBox.textContent = err.message;
+      errorBox.classList.add("show");
+    }
+  });
+</script>
+</body>
+</html>
